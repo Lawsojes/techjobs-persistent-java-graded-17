@@ -19,6 +19,13 @@ public class EmployerController {
 
 
 
+    @RequestMapping("/")
+    public String index(Model model){
+        model.addAttribute("title", "Employers");
+        model.addAttribute("employers",employerRepository.findAll());
+        return "employers/index";
+    }
+
     @GetMapping
     public String displayEmployers(@RequestParam(required = false) Integer employerId, Model model){
 
@@ -53,6 +60,7 @@ public class EmployerController {
                                     Errors errors, Model model) {
 
         if (errors.hasErrors()) {
+
             return "employers/add";
         }
         employerRepository.save(newEmployer);
