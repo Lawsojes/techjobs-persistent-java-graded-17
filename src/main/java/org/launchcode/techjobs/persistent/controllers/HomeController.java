@@ -23,6 +23,7 @@ import java.util.Optional;
  * Created by LaunchCode
  */
 @Controller
+@RequestMapping("/")
 public class HomeController {
 
     @Autowired
@@ -53,22 +54,20 @@ public class HomeController {
     }
 
     @PostMapping("add")
-    public String processAddJobForm(@ModelAttribute @Valid Job newJob,
+    public String processAddJobForm(@ModelAttribute @Valid Job job,
                                     Errors errors, Model model, @RequestParam int employerId, @RequestParam List<Integer> skills) {
 
         if (errors.hasErrors()) {
-	    model.addAttribute("title", "Add Job");
             return "add";
         }
 
-        List<Skill> skillObjs = new ArrayList<>((Collection) skillRepository.findAllById(skills));
-        newJob.setSkills(skillObjs);
-
+        List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+        job.setSkills(skillObjs);
 
         Optional<Employer> requestedEmployer = employerRepository.findById(employerId);
-        newJob.setEmployer(requestedEmployer.get());
+        job.setEmployer(requestedEmployer.get());
 
-        jobRepository.save(newJob);
+        jobRepository.save(job);
         return "redirect:";
     }
 
